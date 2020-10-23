@@ -2,7 +2,7 @@
 
 Deep graph convolution neural network with non-negative matrix factorization for community discove
 
----------------------------------------------------------------------------------------------------
+- - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 requirements:
 
 python >= 3.7
