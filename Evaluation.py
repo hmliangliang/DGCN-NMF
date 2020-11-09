@@ -40,62 +40,18 @@ def evaluation(data,result,label):#注输入向量均为numpy.array类型
                     else:#两个样本在实际不处于同一类簇中
                         TN=TN+1
         FM=0
-        ARI=0
-        Phi=0
-        Hubert=0
         K=0
         RT=0
-        precision=0
         recall=0
         F1=0
         J = 0
         J = TP/(TP+FP+FN+TN)
         FM=TP/math.sqrt((TP+FN)*(TP+FP))#计算的是Folkes and Mallows指标[0,1],值越大则结果越好
-        ARI=2*(TP*TN-FN*FP)/((TP+FN)*(FN+TN)+(TP+FP)*(FP+TN))#计算的是ARI指标[-1,1],值越大越好,-1表示完全不一致
-        Phi=(TP*TN-FN*FP)/math.sqrt((TP+FN)*(TP+FP)*(FN+TN)*(FP+TN)+0.000001)#计算的是Phi指标[-1,1],值越大越好,-1表示完全不一致
-        Hubert=(comb(data.shape[0],2)*TP-(TP+FN)*(TP+FP))/math.sqrt((TP+FN)*(TP+FP)*(TN+FN)*(TN+FP)+0.000000000001)#计算的是Hubert指标[-1,1],值越大越好,-1表示完全不一致
         K=0.5*(TP/(TP+FP)+TP/(TP+FN))#计算的是Kulczynski指标[0,1],值越大越好,0表示完全不一致,1表示完全一致
         RT=(TP+TN)/(TP+TN+2*(FN+FP))#计算的是Rogers-Tanimoto指标[0,1]
         precision=TP/(TP+FP)#计算的是precision指标
         recall=TP/(TP+FN)#计算的是召回率指标
         F1=(2*precision*recall)/(precision+recall)#计算的是F-measure指标
-        #计算互信息度量指标
-        NMI=0.0#互信息值
-        cresult=[]#将result改写成列表的形式，列表中的每一个元素即为一个类簇样本的序号
-        clabel=[]#将label改写成列表的形式，列表中的每一个元素即为一个类簇样本的序号
-        #聚类结果找出不同类标签
-        values1=np.unique(result[0,:])
-        values1=values1.reshape((1,values1.shape[0]))
-        values2=np.unique(label[0,:])
-        values2 = values2.reshape((1, values2.shape[0]))
-        for i in range(values1.shape[1]):
-            temp=[]
-            temp=np.argwhere(result[0,:]==values1[0,i]).reshape(1,np.argwhere(result[0,:]==values1[0,i]).shape[0])#找出聚类结果中每一类簇的样本保存到列表中
-            cresult.append(temp[0,:].tolist())
-        for i in range(values2.shape[1]):
-            temp=[]
-            temp=np.argwhere(label[0,:]==values2[0,i]).reshape(1,np.argwhere(label[0,:]==values2[0,i]).shape[0])#找出真实类标签中每一类簇的样本保存到列表中
-            clabel.append(temp[0,:].tolist())
-        del values1
-        del values2
-        value1=0#公式上面的求和值
-        value2=0#公式下面的第一个求和值
-        value3=0#公式下面的第二个求和值
-        for iset in cresult:
-            Ni=len(iset)#聚类的类簇Ci的大小
-            if Ni>0:
-                value2=value2+Ni*math.log(Ni/data.shape[0])
-            for jset in clabel:
-                Nj=len(jset)#真实类簇的大小
-                Nij=np.array([np.intersect1d(jset,iset)]).shape[1]#两个集合的交集
-                if Ni>0 and Nj>0:
-                    value1=value1+Nij*math.log((data.shape[0]*Ni)/(Ni*Nj))
-                    value3=value3+Nj*math.log(Nj/data.shape[0])
-        if value2==0 or value3==0:
-            NMI = 0
-        else:
-            NMI = value1 / math.sqrt(value2 * value3)  # 计算最终的互信息值
-        NMI = 1/(1+np.exp(-NMI))
-        return J,FM,ARI,Phi,Hubert,K,RT,precision,recall,F1,NMI,Q#返回计算的结果
+        return J,FM,K,recall,F1#返回计算的结果
     else:
-        return 0,0,0,0,0,0,0,0,0,0,0,Q
+        return 0,0,0,0,0
