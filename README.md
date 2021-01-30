@@ -1,6 +1,8 @@
 # DGCN-NMF
 
 Deep graph convolution neural network with non-negative matrix factorization for community discovery   (It has been rejected by ICASSP 2021--2021/01/30) 
+
+Response Letter is a submitted file in rebuttal phase.
     
 
 requirements:
